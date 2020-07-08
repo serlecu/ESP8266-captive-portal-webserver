@@ -1,6 +1,5 @@
 #include <WiFi.h>
 #include <DNSServer.h>
-
 #include <ESP32WebServer.h>
 #include <ESPmDNS.h>
 #include <FS.h>
@@ -9,8 +8,10 @@
 #define DBG_OUTPUT_PORT Serial
 
 const byte DNS_PORT = 53;
-const char * ssid = "Join STASY";
-const char * password = "12345678";
+const char * ssid = "ssid";
+const char * password = "pass";
+const bool hidden = "false";
+const int channel = 1;
 
 IPAddress apIP(192, 168, 1, 1);
 
@@ -22,12 +23,12 @@ void setup() {
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   WiFi.softAP(ssid);
+  //WiFi.softAP(ssid, pass, channel, hidden);
 
   // if DNSServer is started with "*" for domain name, it will reply with
   // provided IP to all DNS request
   dnsServer.start(DNS_PORT, "*", apIP);
 
-//- - - - - - - - -
   //start debug port
   DBG_OUTPUT_PORT.begin(115200);
   DBG_OUTPUT_PORT.print("\n");
@@ -41,7 +42,6 @@ void setup() {
       server.send(200, "text/html", metaRefreshStr);
     }
   });
-//- - - - - - - - -
   
   server.begin();
 }
